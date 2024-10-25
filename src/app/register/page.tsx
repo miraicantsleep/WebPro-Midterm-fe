@@ -32,7 +32,7 @@ export default function RegisterPage() {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        await response.json();
         alert('Register berhasil');
 
         router.push('/dashboard');

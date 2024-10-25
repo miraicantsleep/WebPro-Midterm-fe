@@ -71,17 +71,17 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: transaction.title, // Adjust to match expected field name
+          name: transaction.title,
           notes: transaction.notes,
-          amount: parseFloat(transaction.amount), // Ensure amount is a number
-          type: transaction.categories, // Ensure 'type' matches backend expectation
+          amount: parseFloat(transaction.amount),
+          type: transaction.categories,
         }),
       });
 
       if (response.ok) {
-        const newTransaction = await response.json();
-        fetchTransaction(token); // Refresh the list after creation
-        resetForm(); // Reset the form after creating a transaction
+        await response.json();
+        fetchTransaction(token);
+        resetForm();
       } else {
         console.error('Failed to create transaction', response.status);
       }
