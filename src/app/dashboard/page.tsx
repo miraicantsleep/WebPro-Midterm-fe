@@ -197,10 +197,18 @@ export default function Dashboard() {
     setTotalNetWorth(incomes - expenses);
   }
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
-    setTransaction((prev) => ({ ...prev, [name]: value }));
+  
+    // Update your state here
+    setTransaction({
+      ...transaction,
+      [name]: value,
+    });
   };
+  
 
   return (
     <div className="">
