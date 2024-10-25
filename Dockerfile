@@ -1,3 +1,9 @@
+# Install dependencies only when needed
+FROM node:18-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci
+
 # Production image, copy all the files and run next
 FROM node:18-alpine AS runner
 WORKDIR /app
