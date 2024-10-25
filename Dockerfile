@@ -1,24 +1,20 @@
-# Install dependencies only when needed
-FROM node:18-alpine AS deps
+# Use a Node.js base image
+FROM node:18-alpine
+
+# Set the working directory inside the container
 WORKDIR /app
+
+# Copy package.json and package-lock.json
 COPY package.json package-lock.json* ./
-RUN npm ci
 
-# Production image, copy all the files and run next
-FROM node:18-alpine AS runner
-WORKDIR /app
+# Install dependencies
+RUN npm install
 
-ENV NODE_ENV production
+# Copy the rest of the application code
+COPY . .
 
-# If using a custom next.config.js file, uncomment this line
-# COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./
-
-# Next.js build output
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-
+# Expose port 3000
 EXPOSE 3000
 
+# Start the Next.js application in development mode
 CMD ["npm", "run", "dev"]
