@@ -15,11 +15,11 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
-  const handleInputUser = (event) => {
+  const handleInputUser = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues(prev => ({ ...prev, [event.target.name]: event.target.value }));
   }
 
-  const handleRegister = async (event) => {
+  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {

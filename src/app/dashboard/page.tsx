@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
-  const [editingTransaction, setEditingTransaction] = useState(null);
+  const [editingTransaction, setEditingTransaction] = useState<{ id: string; name: string; notes: string; amount: number; type: string } | null>(null);
   const [transaction, setTransaction] = useState({
     title: '',
     notes: '',
@@ -34,7 +34,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  const fetchTransaction = async (token) => {
+  const fetchTransaction = async (token: string) => {
     try {
       const response = await fetch('https://ets-pweb-be-production.up.railway.app/api/transaksi', {
         method: 'GET',
@@ -56,7 +56,7 @@ export default function Dashboard() {
     }
   }
 
-  const createTransaction = async (transaction) => {
+  const createTransaction = async (transaction: { title: string; notes: string; amount: string; categories: string }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('Please login first');
@@ -90,7 +90,7 @@ export default function Dashboard() {
     }
   }
 
-  const updateTransaction = async (transaction) => {
+  const updateTransaction = async (transaction: { id: string; title: string; notes: string; amount: string; categories: string }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('Please login first');
@@ -98,14 +98,14 @@ export default function Dashboard() {
     }
 
     try {
-      const response = await fetch(`https://ets-pweb-be-production.up.railway.app/api/transaksi/${transaction.id}`, {
+      const response = await fetch('https://ets-pweb-be-production.up.railway.app/api/transaksi', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: transaction.title, // use 'title' instead of 'name'
+          name: transaction.title,
           notes: transaction.notes,
           amount: parseFloat(transaction.amount),
           type: transaction.categories,
@@ -123,7 +123,7 @@ export default function Dashboard() {
     }
   }
 
-  const deleteTransaction = async (transactionId) => {
+  const deleteTransaction = async (transactionId: string) => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('Please login first');
@@ -151,7 +151,7 @@ export default function Dashboard() {
     }
   }
 
-  const handleSubmitTransaction = async (event) => {
+  const handleSubmitTransaction = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (editingTransaction) {
       await updateTransaction({ ...transaction, id: editingTransaction.id });
@@ -161,11 +161,11 @@ export default function Dashboard() {
     setShowModal(false);
   }
 
-  const handleEditTransaction = (transaction) => {
+  const handleEditTransaction = (transaction: { id: string; name: string; notes: string; amount: number; type: string }) => {
     setTransaction({
       title: transaction.name, // Use 'title' correctly
       notes: transaction.notes, // Match the keys properly
-      amount: transaction.amount,
+      amount: transaction.amount.toString(),
       categories: transaction.type,
     });
     setEditingTransaction(transaction);
@@ -182,7 +182,7 @@ export default function Dashboard() {
     setEditingTransaction(null);
   };
 
-  const calculateTotal = (transactions) => {
+  const calculateTotal = (transactions: { type: string; amount: number }[]) => {
     let incomes = 0;
     let expenses = 0;
     transactions.forEach((transaction) => {
@@ -197,7 +197,7 @@ export default function Dashboard() {
     setTotalNetWorth(incomes - expenses);
   }
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setTransaction((prev) => ({ ...prev, [name]: value }));
   };
